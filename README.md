@@ -16,6 +16,10 @@ Just a Hostel management system for DBMS project, nothing special...
 - JS Runtime Env: [Node.js](https://nodejs.org/)
 - Language: [TypeScript](https://www.typescriptlang.org/)
 
+**Database**
+- PostgreSQL 18+
+- Host: Docker Container
+
 **Monorepo Tools**
 - [pnpm](https://pnpm.io/) (Workspaces)
 
@@ -61,15 +65,31 @@ pnpm env use --global lts
 pnpm install
 ```
 
+### 4. Install Docker Engine CLI
+For **Arch Linux**:
+```bash
+# install only DE not the docker app - heavy
+sudo pacman -S docker docker-compose
+sudo systemctl enable --now docker.service
+sudo usermod -aG docker $USER
+# logout and login again
+# verify installation
+docker run hello-world
+```
+
+**For Window**: [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+
+**For MacOS**: [Docker Desktop for MacOS](https://docs.docker.com/desktop/setup/install/mac-install/)
 
 ### 5. Run Development Environment
-This command runs both the frontend and backend in parallel:
+This command runs both the frontend, server and database container in parallel. I used `concurrently` to run all three command in same terminal to receive logs in same terminal:
 ```bash
 pnpm dev
 ```
 e.g.
 - Frontend: `http://localhost:5173`
-- Backend: `http://localhost:3001`
+- Backend: `http://localhost:3000`
+- Docker DB: `port: 5432` 
 
 ## Available Scripts
 
@@ -78,3 +98,19 @@ e.g.
 - `pnpm dev:server` - Start only the backend.
 - `pnpm lint` - Run ESLint across all apps.
 - `pnpm build` - Build all apps for production.
+
+## Troubleshooting
+
+- **Database Connection Failed**: Ensure the Docker container is running.
+  ```bash
+  docker ps
+  ```
+- **Port Already in Use**: Check if ports `3000` (Server), `5173` (Web), or `5432` (Postgres) are occupied by another process.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and open a Pull Request.
+
+## License
+
+Distributed under the GNU General Public License v3. See `LICENSE` for more information.
