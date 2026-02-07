@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --recursive --parallel run dev",
+    "dev": "concurrently \"docker compose up\" \"pnpm --recursive --parallel run dev\" --kill-others --names \"db,apps\"",
     "dev:web": "pnpm --filter @hostel-hub/web dev",
     "dev:server": "pnpm --filter @hostel-hub/server dev",
     "build": "pnpm run -r build",
     "build:web": "pnpm --filter @hostel-hub/web build",
     "build:server": "pnpm --filter @hostel-hub/server build",
     "lint": "pnpm run -r lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

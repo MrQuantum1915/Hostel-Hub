@@ -6,15 +6,15 @@ Just a Hostel management system for DBMS project, nothing special...
 ## Tech Stack
 
 **Frontend** (`apps/web`)
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
+- Framwork: [React](https://react.dev/)
+- Library: [TypeScript](https://www.typescriptlang.org/)
+- Build Tool: [Vite](https://vitejs.dev/)
+- CSS: [Tailwind CSS v4](https://tailwindcss.com/)
 
 **Backend** (`apps/server`)
-- [Fastify](https://fastify.dev/docs/latest/)
-- [Node.js](https://nodejs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
+- Web Framework: [Fastify](https://fastify.dev/docs/latest/) (not express)
+- JS Runtime Env: [Node.js](https://nodejs.org/)
+- Language: [TypeScript](https://www.typescriptlang.org/)
 
 **Monorepo Tools**
 - [pnpm](https://pnpm.io/) (Workspaces)
