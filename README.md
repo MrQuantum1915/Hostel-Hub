@@ -52,7 +52,7 @@ On Posix systems (Linux/MacOS)
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
-For damn Windows : Visit official page --> [Installation](https://pnpm.io/installation)
+For damn Windows : Visit official page >> [Installation](https://pnpm.io/installation)
 
 
 ### 3. Install Node.js (if not installed)
