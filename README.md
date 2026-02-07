@@ -12,6 +12,7 @@ Just a Hostel management system for DBMS project, nothing special...
 - [Tailwind CSS v4](https://tailwindcss.com/)
 
 **Backend** (`apps/server`)
+- [Fastify](https://fastify.dev/docs/latest/)
 - [Node.js](https://nodejs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 
@@ -27,10 +28,17 @@ This is a monorepo containing:
 
 ## Setup
 
-### 1. Clone the repo
+### 1. Fork and Clone the repo
+
+1. **Fork** the repository on GitHub.
+2. **Clone** your forked repository:
 ```bash
-git clone https://github.com/MrQuantum1915/Hostel-Hub
+git clone https://github.com/<YOUR_USERNAME>/Hostel-Hub
 cd Hostel-Hub
+```
+3. Set up **upstream** (to keep your fork up-to-date):
+```bash
+git remote add upstream https://github.com/MrQuantum1915/Hostel-Hub
 ```
 
 ### 2. Install pnpm (package manager) :)
@@ -43,18 +51,18 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 For damn Windows : Visit official page --> [Installation](https://pnpm.io/installation)
 
 
-### 3. If `nodejs` is not installed already
-```
+### 3. Install Node.js (if not installed)
+```bash
 pnpm env use --global lts
 ```
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 ```bash
 pnpm install
 ```
 
 
-### 4. Run Development Environment
+### 5. Run Development Environment
 This command runs both the frontend and backend in parallel:
 ```bash
 pnpm dev
