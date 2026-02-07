@@ -1,6 +1,6 @@
 # Hostel Hub
 
-Just a Hostel management system for DBMS project, nothing special...
+Just a Hostel management system for DBMS course project, nothing special...
 
 
 ## Tech Stack
