@@ -111,6 +111,10 @@ e.g.
 
 Contributions are welcome! Please fork the repository and open a Pull Request.
 
+## Docs
+- [Architecture](docs/architecture.md)
+- [Database](docs/database.md)
+
 ## License
 
 Distributed under the GNU General Public License v3. See [`LICENSE`](LICENSE) for more information.
