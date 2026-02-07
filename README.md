@@ -93,7 +93,7 @@ e.g.
 
 ## Available Scripts
 
-- `pnpm dev` - Start both web and server in development mode.
+- `pnpm dev` - Start both web, server and database container in development mode.
 - `pnpm dev:web` - Start only the frontend.
 - `pnpm dev:server` - Start only the backend.
 - `pnpm lint` - Run ESLint across all apps.
@@ -113,4 +113,4 @@ Contributions are welcome! Please fork the repository and open a Pull Request.
 
 ## License
 
-Distributed under the GNU General Public License v3. See `LICENSE` for more information.
+Distributed under the GNU General Public License v3. See [`LICENSE`](LICENSE) for more information.
