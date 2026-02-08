@@ -30,6 +30,12 @@ function Navbar() {
               {item}
             </Link>
           ))}
+          <Link
+            to="/login"
+            className="px-4 py-2 text-sm font-bold text-black bg-white rounded-lg hover:bg-amber-400 transition-all duration-300 transform hover:scale-105"
+          >
+            Login
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -51,6 +57,13 @@ function Navbar() {
               {item}
             </Link>
           ))}
+          <Link
+            to="/login"
+            className="text-lg font-bold text-amber-400 hover:text-white transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Login
+          </Link>
         </div>
       )}
     </nav>

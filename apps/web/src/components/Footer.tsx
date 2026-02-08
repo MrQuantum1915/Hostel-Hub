@@ -33,9 +33,9 @@ function Footer() {
             <span className="text-xs font-bold text-amber-50 uppercase tracking-widest">Dev</span>
             <nav className="flex flex-col gap-2 items-center md:items-start">
               <Link to="/team" className="text-sm text-white/70 hover:text-amber-50 transition-colors">Team</Link>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-white/70 hover:text-amber-50 transition-colors">
-                <Github className="w-4 h-4" />
-                <span>Source</span>
+              <a href="https://github.com/MrQuantum1915/Hostel-Hub" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-white/70 hover:text-amber-50 transition-colors">
+                <img src="/github.svg" alt="GitHub" className="w-4 h-4" />
+                <span>GitHub</span>
               </a>
             </nav>
           </div>

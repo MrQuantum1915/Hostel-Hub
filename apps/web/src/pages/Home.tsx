@@ -8,11 +8,11 @@ interface TestData {
 }
 
 function Home() {
-    const [test, settest] = useState<TestData | null>(null);
+    const [test, settest] = useState<TestData>({ status: "Disconnected", time: "0ms" });
 
     const handleClick = async () => {
-        if (test) {
-            settest(null);
+        if (test.status === "Connected") {
+            settest({ status: "Disconnected", time: "0ms" });
             return;
         }
         const response = await fetch('http://localhost:3000/db-test')
@@ -54,11 +54,11 @@ function Home() {
                     >
                         Test Server
                     </button>
-                    {test && (
-                        <p className='text-lg mt-4 text-green-400 font-mono bg-black/50 p-2 rounded border border-green-500/30'>
-                            {test.status} to PostgreSQL Database on Time- {test.time}
-                        </p>
-                    )}
+                    {/* {test && ( */}
+                    <p className='text-lg mt-4 text-green-400 font-mono bg-black/50 p-2 rounded border border-green-500/30'>
+                        {test?.status} to PostgreSQL Database on Time- {test?.time}
+                    </p>
+                    {/* )} */}
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 w-full max-w-4xl">

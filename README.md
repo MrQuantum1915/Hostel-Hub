@@ -78,7 +78,7 @@ pnpm env use --global lts
 pnpm install
 ```
 
-### 4. Install Docker Engine CLI
+### 5. Install Docker Engine CLI
 For **Arch Linux**:
 ```bash
 # install only DE not the docker app - heavy
@@ -94,7 +94,23 @@ docker run hello-world
 
 **For MacOS**: [Docker Desktop for MacOS](https://docs.docker.com/desktop/setup/install/mac-install/)
 
-### 5. Run Development Environment
+### 6. Configuration & Database
+
+1. **Environment Setup**: Create `.env` in `apps/server`.
+   - Generate Secret Key:
+     ```bash
+     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+     ```
+   - Copy above key and add it to `.env` as `JWT_SECRET_KEY=that_key`.
+
+2. **Database Initialization**:
+   ```bash
+   cd apps/server
+   pnpm db:manage setup
+   ```
+   > **Note:** You can also use `pnpm db:manage reset` to clear the database or `query` to run a query standalone or add custom script in `manageDB.ts` to manage other thing!.
+
+### 7. Run Development Environment
 This command runs both the frontend, server and database container in parallel. I used `concurrently` to run all three command in same terminal to receive logs in same terminal:
 ```bash
 pnpm dev
@@ -107,6 +123,7 @@ e.g.
 ## Available Scripts
 
 - `pnpm dev` - Start both web, server and database container in development mode.
+- `pnpm db:manage [command]` - (In `apps/server`) Manage database: `setup`, `reset`, `query` or `--help`.
 - `pnpm dev:web` - Start only the frontend.
 - `pnpm dev:server` - Start only the backend.
 - `pnpm lint` - Run ESLint across all apps.
