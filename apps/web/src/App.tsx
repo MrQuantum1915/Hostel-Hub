@@ -1,35 +1,24 @@
 import './App.css'
-import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-
-interface TestData {
-  status: string
-  time: string
-}
+import Home from './pages/Home'
+import Dashboard from './pages/Dashboard'
+import Contact from './pages/Contact'
+import Help from './pages/Help'
+import Team from './pages/Team'
 
 function App() {
-  const [test, settest] = useState<TestData | null>(null);
-
-  const handleClick = async () => {
-    if(test){
-      settest(null);
-      return;
-    }
-    const response = await fetch('http://localhost:3000/db-test')
-    const {status, time} = await response.json()
-    console.log({status, time})
-    settest({status, time})
-  }
-
   return (
     <>
       <Navbar />
-      <div className='text-8xl text-center flex flex-col items-center justify-center min-h-screen'>
-        Welcome to HOSTEL HUB!
-        <button className="border-2 rounded-md p-4 m-4 bg-amber-50/20 text-4xl " onClick={handleClick}>Test Server</button>
-        {test && <p className='text-4xl mt-4'>{test.status} to PostgreSQL Database on Time- {test.time}</p>}
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="/team" element={<Team />} />
+      </Routes>
       <Footer />
     </>
   )
