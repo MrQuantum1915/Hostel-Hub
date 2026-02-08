@@ -3,6 +3,7 @@
 Just a Hostel management system for DBMS course project, nothing special...
 
 
+## Tech Stack
 
 <p align="center">
   <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
@@ -16,7 +17,6 @@ Just a Hostel management system for DBMS course project, nothing special...
   <img src="https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220" alt="PNPM" />
 </p>
 
-## Tech Stack
 
 **Frontend** (`apps/web`)
 - Framwork: [React](https://react.dev/)
