@@ -22,7 +22,7 @@ function Home() {
     }
 
     return (
-        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div className="relative min-h-screen flex flex-col items-center justify-center pt-24 md:pt-20 overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">

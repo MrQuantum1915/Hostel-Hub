@@ -7,7 +7,7 @@ Just a Hostel management system for DBMS course project, nothing special...
 
 **Frontend** (`apps/web`)
 - Framwork: [React](https://react.dev/)
-- Library: [TypeScript](https://www.typescriptlang.org/)
+- Language: [TypeScript](https://www.typescriptlang.org/)
 - Build Tool: [Vite](https://vitejs.dev/)
 - CSS: [Tailwind CSS v4](https://tailwindcss.com/)
 
