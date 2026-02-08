@@ -1,12 +1,12 @@
 ## Strategic Rationale Diagram
 
-![SRD](srd.png)
+![SRD](assets/srd.png)
 
 ## Use Case Diagram
-![UCD](image.png)
+![UCD](assets/image.png)
 
 ## Activity Diagram
-![AD](image-2.png)
+![AD](assets/image-2.png)
 
 ## System Architecture & Tech Stack
 

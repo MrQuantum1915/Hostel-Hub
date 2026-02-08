@@ -1,5 +1,6 @@
 ## ER Diagram
 
-![ERD](image-1.png)
+![ERD](assets/image-1.png)
 
 ## DB Schema
+karhe bhai .... wait karo
