@@ -103,6 +103,17 @@ docker run hello-world
      ```
    - Copy above key and add it to `.env` as `JWT_SECRET_KEY=that_key`.
 
+   - Generate another Secret Key:
+     ```bash
+     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+     ```
+   - Copy above key and add it to `.env` as `COOKIE_SECRET=that_key`.
+
+    - Final `.env` should look like this:
+    ```env
+    JWT_SECRET_KEY=jwt_secret_key
+    COOKIE_SECRET=cookie_secret
+    ```
 2. **Database Initialization**:
    ```bash
    cd apps/server
