@@ -10,6 +10,7 @@ import Help from './pages/Help'
 import Team from './pages/Team'
 import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
+import { ThemeProvider } from './components/ThemeProvider'
 
 function App() {
   const [isloggedin, setIsloggedin] = useState<boolean>(false)
@@ -45,7 +46,7 @@ function App() {
   }
 
   return (
-    <>
+    <ThemeProvider defaultTheme="system">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -56,7 +57,7 @@ function App() {
         <Route path="/team" element={<Team />} />
       </Routes>
       <Footer />
-    </>
+    </ThemeProvider>
   )
 }
 
