@@ -17,7 +17,7 @@ function Navbar({ isloggedin }: NavbarProps) {
       <div className="container mx-auto flex flex-row items-center justify-between">
         <Link to="/" className="flex flex-row items-center group">
           <div className="relative overflow-hidden">
-            <img className="max-w-12 mx-auto transition-transform duration-300 group-hover:scale-110" src="/logo.webp" alt="Hostel Hub Logo" />
+            <img className="max-w-12 mx-auto border border-border rounded-full transition-transform duration-300 group-hover:scale-110" src="/logo.webp" alt="Hostel Hub Logo" />
           </div>
           <div className="ml-3 text-2xl font-bold font-serif tracking-tight text-foreground group-hover:text-accent transition-colors duration-300">
             HOSTEL HUB

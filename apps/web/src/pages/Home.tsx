@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, ClipboardList } from 'lucide-react'
-import { useState } from 'react'
+
 
 interface TestData {
     status: string
@@ -8,19 +8,6 @@ interface TestData {
 }
 
 function Home() {
-    const [test, settest] = useState<TestData>({ status: "Disconnected", time: "0ms" });
-
-    const handleClick = async () => {
-        if (test.status === "Connected") {
-            settest({ status: "Disconnected", time: "0ms" });
-            return;
-        }
-        const response = await fetch('http://localhost:3000/db-test')
-        const { status, time } = await response.json()
-        console.log({ status, time })
-        settest({ status, time })
-    }
-
     return (
         <div className="relative min-h-screen flex flex-col items-center justify-center pt-24 md:pt-20 overflow-hidden bg-background text-foreground">
 
@@ -40,25 +27,12 @@ function Home() {
                         <ClipboardList className="w-5 h-5" />
                         <span>Go to Dashboard</span>
                     </Link>
-                    <Link to="/complaint" className="w-full sm:w-auto px-8 py-3.5 bg-transparent text-foreground font-medium rounded-lg border border-border hover:bg-muted transition-all flex items-center justify-center gap-2">
+                    <Link to="/complaint" className="w-full sm:w-auto px-8 py-3.5 bg-transparent text-foreground font-medium rounded-lg border border-border hover:border-primary hover:bg-primary transition-all duration-300 hover:text-primary-foreground flex items-center justify-center gap-2">
                         <span>File a Complaint</span>
                         <ArrowRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>
 
-                <div className="mt-8 flex flex-col items-center">
-                    <button
-                        className="px-6 py-3 border border-border bg-muted/50 text-foreground rounded-lg font-medium hover:bg-muted transition-all"
-                        onClick={handleClick}
-                    >
-                        Test Server
-                    </button>
-                    {/* {test && ( */}
-                    <p className='text-lg mt-4 text-green-600 dark:text-green-400 font-mono bg-green-100/50 dark:bg-green-900/20 p-2 rounded border border-green-200 dark:border-green-800'>
-                        {test?.status} to PostgreSQL Database on Time- {test?.time}
-                    </p>
-                    {/* )} */}
-                </div>
 
                 <div className="mt-16 pt-8 border-t border-border grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 w-full max-w-4xl">
                     {[
