@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { User, Lock, Loader2, ArrowRight, LogOut } from 'lucide-react'
+import { User, Lock, Loader2, ArrowRight, LogOut, Mail, Phone, UserCircle } from 'lucide-react'
 
 interface LoginResponse {
     success: boolean
@@ -20,6 +20,9 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
     const [stage, setStage] = useState("login")
     const [user_name, setUserName] = useState('')
     const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
 
@@ -29,21 +32,29 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
 
         try {
             const endpoint = stage === "login" ? "/login" : "/register"
+            const body = stage === "login"
+                ? { user_name, password }
+                : { user_name, password, name, email, phone }
+
             const response = await fetch("http://localhost:3000/auth" + endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    user_name,
-                    password
-                }),
+                body: JSON.stringify(body),
                 credentials: 'include'
             })
             const { success, user, message }: LoginResponse = await response.json()
             if (success) {
                 if (stage == "register") {
                     setStage("login")
+                    // to be implemented
+                    setUserName('')
+                    setPassword('')
+                    setName('')
+                    setEmail('')
+                    setPhone('')
+                    alert("Registration successful! Please sign in.")
                 }
                 else {
                     setIsloggedin(true)
@@ -90,7 +101,54 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
                         <p className="text-muted-foreground">{stage === "login" ? "Sign in to access your account" : "Create a new account"}</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {stage === "register" && (
+                            <>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground/80 ml-1">Full Name</label>
+                                    <div className="relative group">
+                                        <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-accent transition-colors" />
+                                        <input
+                                            type="text"
+                                            required
+                                            className="w-full bg-muted/30 border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent/50 focus:bg-muted/50 transition-all duration-300"
+                                            placeholder="John Doe"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground/80 ml-1">Email</label>
+                                    <div className="relative group">
+                                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-accent transition-colors" />
+                                        <input
+                                            type="email"
+                                            required
+                                            className="w-full bg-muted/30 border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent/50 focus:bg-muted/50 transition-all duration-300"
+                                            placeholder="john@example.com"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-foreground/80 ml-1">Phone</label>
+                                    <div className="relative group">
+                                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-accent transition-colors" />
+                                        <input
+                                            type="tel"
+                                            required
+                                            className="w-full bg-muted/30 border border-border rounded-xl py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:outline-none focus:border-accent/50 focus:bg-muted/50 transition-all duration-300"
+                                            placeholder="+1 234 567 890"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-foreground/80 ml-1">User Name</label>
                             <div className="relative group">

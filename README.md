@@ -121,6 +121,10 @@ docker run hello-world
    ```
    > **Note:** You can also use `pnpm db:manage reset` to clear the database or `query` to run a query standalone or add custom script in `manageDB.ts` to manage other thing!.
 
+   > **NOTE:** If you wanna run custom testing query on database, make a file with this EXACT name `TestingQueries.sql` in `apps/server/src/scripts` and run `pnpm db:manage query` to see the result.
+
+   >**NOTE:** Never write raw query in `manageDB.ts` script code!
+
 ### 7. Run Development Environment
 This command runs both the frontend, server and database container in parallel. I used `concurrently` to run all three command in same terminal to receive logs in same terminal:
 ```bash

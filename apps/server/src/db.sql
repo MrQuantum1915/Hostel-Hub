@@ -1,0 +1,20 @@
+ CREATE TABLE IF NOT EXISTS auth(
+    id UUID PRIMARY KEY DEFAULT uuidv7(),
+    user_name TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+            
+CREATE TABLE IF NOT EXISTS users(
+    id UUID REFERENCES auth(id) ON DELETE CASCADE,
+    user_name TEXT REFERENCES auth(user_name) ON DELETE CASCADE,
+    name VARCHAR(20) NOT NULL,
+    email TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'student',
+    phone TEXT NOT NULL
+);
+
+
+
+

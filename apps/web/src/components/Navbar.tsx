@@ -3,7 +3,11 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 
-function Navbar() {
+interface NavbarProps {
+  isloggedin: boolean
+}
+
+function Navbar({ isloggedin }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -31,12 +35,21 @@ function Navbar() {
               {item}
             </Link>
           ))}
-          <Link
-            to="/login"
-            className="px-4 py-2 text-sm font-bold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
-          >
-            Login
-          </Link>
+          {isloggedin ? (
+            <Link
+              to="/profile"
+              className="px-4 py-2 text-sm font-bold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
+            >
+              Profile
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="px-4 py-2 text-sm font-bold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-all duration-300 transform hover:scale-105"
+            >
+              Login
+            </Link>
+          )}
           <ThemeToggle />
         </div>
 
@@ -61,13 +74,23 @@ function Navbar() {
               {item}
             </Link>
           ))}
-          <Link
-            to="/login"
-            className="text-lg font-bold text-accent hover:text-foreground transition-colors"
-            onClick={() => setIsOpen(false)}
-          >
-            Login
-          </Link>
+          {isloggedin ? (
+            <Link
+              to="/profile"
+              className="text-lg font-bold text-accent hover:text-foreground transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Profile
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="text-lg font-bold text-accent hover:text-foreground transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Login
+            </Link>
+          )}
         </div>
       )}
     </nav>

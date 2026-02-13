@@ -3,13 +3,13 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const QUERY = `
-    select * from auth;
-`;
+import fs from 'fs';
 
 // using nodejs env loading because fastify-env works in server not in standalone scripts
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const envPath = path.resolve(__dirname, '../../.env');
+
+const QUERY = fs.readFileSync(path.join(__dirname, 'TestingQueries.sql'), 'utf-8');
 
 try {
     process.loadEnvFile(envPath);
@@ -59,7 +59,7 @@ const setupDB = async () => {
                 user_name TEXT REFERENCES auth(user_name) ON DELETE CASCADE,
                 name VARCHAR(20) NOT NULL,
                 email TEXT NOT NULL,
-                role TEXT NOT NULL DEFAULT 'user',
+                role TEXT NOT NULL DEFAULT 'student',
                 phone TEXT NOT NULL
             );
         `);
@@ -125,7 +125,7 @@ const main = async () => {
     const args = process.argv.slice(2);
     console.log("Command:", args[0]);
     if (args[0] === '--help') {
-            console.log(`
+        console.log(`
 Usage: pnpm db:manage [command]
 
 Commands:
@@ -134,8 +134,8 @@ Commands:
     query     Run the SQL command defined in the QUERY constant
     --help    Show this help message
                 `);
-            return;
-        }
+        return;
+    }
     try {
         // start docker first....
         console.log("[INFO] Starting database container...");

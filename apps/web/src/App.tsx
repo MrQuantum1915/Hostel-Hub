@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import Contact from './pages/Contact'
 import Help from './pages/Help'
 import Team from './pages/Team'
+import Profile from './pages/Profile'
 import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { ThemeProvider } from './components/ThemeProvider'
@@ -47,11 +48,12 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="system">
-      <Navbar />
+      <Navbar isloggedin={isloggedin} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login isloggedin={isloggedin} setIsloggedin={setIsloggedin} />} />
         <Route path="/dashboard" element={isloggedin ? <Dashboard /> : <Login isloggedin={isloggedin} setIsloggedin={setIsloggedin} />} />
+        <Route path="/profile" element={isloggedin ? <Profile /> : <Login isloggedin={isloggedin} setIsloggedin={setIsloggedin} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/help" element={<Help />} />
         <Route path="/team" element={<Team />} />
