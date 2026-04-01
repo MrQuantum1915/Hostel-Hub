@@ -44,29 +44,14 @@ const waitForDB = async () => {
 
 const setupDB = async () => {
     try {
-        console.log("Connecting to database...");
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS auth(
-                id UUID PRIMARY KEY DEFAULT uuidv7(),
-                user_name TEXT UNIQUE NOT NULL,
-                password_hash TEXT NOT NULL,
-                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-            );
-            
-            CREATE TABLE IF NOT EXISTS users(
-                id UUID REFERENCES auth(id) ON DELETE CASCADE,
-                user_name TEXT REFERENCES auth(user_name) ON DELETE CASCADE,
-                name VARCHAR(20) NOT NULL,
-                email TEXT NOT NULL,
-                role TEXT NOT NULL DEFAULT 'student',
-                phone TEXT NOT NULL
-            );
-        `);
+        console.log("Connecting to database and reading schema...");
+        const schemaPath = path.join(__dirname, '../db.sql');
+        const schema = fs.readFileSync(schemaPath, 'utf-8');
 
-        console.log("DB initialized successfully!");
-        console.log("- Created table: auth");
-        console.log("- Created table: users");
+        console.log("Initializing database from db.sql...");
+        await pool.query(schema);
+
+        console.log("DB initialized successfully from db.sql!");
 
     } catch (err) {
         console.error("DB initialization failed:", err);
@@ -109,11 +94,19 @@ const runQuery = async () => {
         const res = await pool.query(QUERY);
 
         console.log("Success!");
-        if (res.rows.length > 0) {
-            console.table(res.rows);
-        } else {
-            console.log("No rows returned (DDL command successful).");
-        }
+        
+        const results = Array.isArray(res) ? res : [res];
+        
+        results.forEach((result, index) => {
+            if (results.length > 1) {
+                console.log(`--- Result Set ${index + 1} ---`);
+            }
+            if (result.rows && result.rows.length > 0) {
+                console.table(result.rows);
+            } else {
+                console.log("No rows returned or DDL command successful.");
+            }
+        });
 
     } catch (err) {
         console.error("Query failed:", err);

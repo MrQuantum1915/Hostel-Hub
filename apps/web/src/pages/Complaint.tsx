@@ -69,8 +69,26 @@ function Complaint() {
         setError('')
         setLoading(true)
 
-        console.log('Submitting complaint:', { title, details, category, image })
-        setTimeout(() => {
+        try {
+            const response = await fetch('http://localhost:3000/complaints/complaint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title,
+                    details,
+                    category,
+                    urgency_level: 'normal',
+                    image: imagePreview
+                })
+            });
+            const data = await response.json();
+            
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Failed to submit complaint');
+            }
+            
             setLoading(false)
             setSuccess(true)
             setTitle('')
@@ -78,7 +96,11 @@ function Complaint() {
             setImage(null)
             setImagePreview(null)
             setTimeout(() => setSuccess(false), 3000)
-        }, 1500)
+        } catch (err: any) {
+            console.error('Error submitting complaint:', err)
+            setError(err.message || 'An error occurred while submitting. Please try again later.')
+            setLoading(false)
+        }
     }
 
     return (
