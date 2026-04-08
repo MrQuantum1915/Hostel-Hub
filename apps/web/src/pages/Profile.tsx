@@ -138,7 +138,7 @@ function Profile() {
                         <div className="mt-8 pt-8 border-t border-border/50">
                              <button 
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-destructive transition-colors text-sm font-semibold"
+                                className="w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 py-2 rounded-lg transition-all text-sm font-semibold"
                              >
                                 <LogOut className="w-4 h-4" />
                                 Sign Out
@@ -182,7 +182,7 @@ function Profile() {
                             <button 
                                 onClick={() => setIsEditing(!isEditing)}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                                    isEditing ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary hover:bg-primary/20'
+                                    isEditing ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80' : 'bg-primary/10 text-primary hover:bg-primary/20'
                                 }`}
                             >
                                 {isEditing ? <><X className="w-4 h-4" /> Cancel</> : <><Edit2 className="w-4 h-4" /> Edit Profile</>}

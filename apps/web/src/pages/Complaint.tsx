@@ -75,6 +75,7 @@ function Complaint() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     title,
                     details,

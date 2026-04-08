@@ -49,7 +49,39 @@ export class AuthService {
         if (!isValid) {
             throw new Error('Invalid password');
         }
-        return user;
+        return {
+            id: user.id,
+            user_name: user.user_name,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            user_role: user.user_role
+        };
+    }
+
+    async getUserById(id: string) {
+        const result = await this.db.query(
+            `SELECT a.id, a.user_name, u.name, u.email, u.phone, u.user_role
+             FROM auth a 
+             LEFT JOIN users u ON a.id = u.id 
+             WHERE a.id = $1`,
+            [id]
+        );
+        if (result.rows.length === 0) {
+            throw new Error('User not found');
+        }
+        
+        let userOutput = result.rows[0];
+        if (userOutput.user_role === 'student') {
+            const studentData = await this.db.query(
+                `SELECT roll_no, hostel_name, room_id FROM student WHERE student_id = $1`, [id]
+            );
+            if (studentData.rows.length > 0) {
+                userOutput = { ...userOutput, ...studentData.rows[0] };
+            }
+        }
+        
+        return userOutput;
     }
 
     async updateUser(id: string, data: { name?: string, email?: string, phone?: string }) {

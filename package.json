@@ -10,10 +10,12 @@
     "build": "pnpm run -r build",
     "build:web": "pnpm --filter @hostel-hub/web build",
     "build:server": "pnpm --filter @hostel-hub/server build",
-    "lint": "pnpm run -r lint"
+    "lint": "pnpm run -r lint",
+    "test": "pnpm run -r test"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^9.2.1",
+    "tsx": "^4.19.0"
   },
   "dependencies": {
     "react-router-dom": "^7.13.0"

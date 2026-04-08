@@ -18,9 +18,10 @@ interface LoginResponse {
 interface LoginProps {
     isloggedin: boolean
     setIsloggedin: (isloggedin: boolean) => void
+    setUserRole: (role: string | null) => void
 }
 
-function Login({ isloggedin, setIsloggedin }: LoginProps) {
+function Login({ isloggedin, setIsloggedin, setUserRole }: LoginProps) {
     const [stage, setStage] = useState<"login" | "register">("login")
     const [user_name, setUserName] = useState('')
     const [password, setPassword] = useState('')
@@ -62,6 +63,7 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
                     alert("Registration successful! Welcome to the Hub. Please sign in.")
                 } else {
                     setIsloggedin(true)
+                    setUserRole(data.user.user_role)
                     navigate("/dashboard")
                 }
             } else {
@@ -83,6 +85,7 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
             })
             if (response.ok) {
                 setIsloggedin(false)
+                setUserRole(null)
                 navigate("/")
             }
         } catch (err) {
@@ -110,7 +113,7 @@ function Login({ isloggedin, setIsloggedin }: LoginProps) {
                         </button>
                         <button 
                             onClick={handleLogOut}
-                            className="flex items-center justify-center gap-2 text-muted-foreground hover:text-destructive transition-colors py-2"
+                            className="flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors py-2"
                         >
                             <LogOut className="w-4 h-4" />
                             Sign Out

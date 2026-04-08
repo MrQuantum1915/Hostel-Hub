@@ -12,11 +12,15 @@
 
 ### Overview
 - **Backend Language:** Typescript (Node.js)
-- **Backend Framework:** Fastify (better than Express)
-- **Database:** PostgreSQL
-- **Database Host:** Docker
-- **Database Driver:** node-pg
+- **Backend Framework:** Fastify
+- **Database:** PostgreSQL (Docker)
 - **Frontend:** React + Vite
+
+### Completed Modules
+- **Authentication:** JWT & Cookie-based (argon2).
+- **Complaints:** Role-based management with image attachments, rating, and history.
+- **Announcements:** System-wide notices for students, managed by admins.
+- **Mess Feedback:** Daily meal rating and aggregate reporting dashboard.
 
 ### Technology Justification
 

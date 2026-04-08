@@ -88,14 +88,16 @@ function Dashboard() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                 <div>
                     <h1 className="text-4xl font-serif font-bold text-foreground mb-2">
-                        {isAdmin ? 'Admin Dashboard' : 'My Dashboard'}
+                        {user?.user_role === 'admin' ? 'Admin Dashboard' : user?.user_role === 'staff' ? 'Maintenance Dashboard' : 'My Dashboard'}
                     </h1>
                     <p className="text-muted-foreground">
-                        {isAdmin ? 'Manage and update student complaints efficiently.' : 'Track the progress of your submitted complaints here.'}
+                        {user?.user_role === 'admin' ? 'Manage and update student complaints efficiently.' : user?.user_role === 'staff' ? 'View and resolve assigned maintenance tasks.' : 'Track the progress of your submitted complaints here.'}
                     </p>
                 </div>
                 <div className="bg-muted px-4 py-2 rounded-lg border border-border">
-                    <span className="text-sm font-medium text-muted-foreground mr-2">Total Complaints:</span>
+                    <span className="text-sm font-medium text-muted-foreground mr-2">
+                        {user?.user_role === 'staff' ? 'Assigned Tasks:' : 'Total Complaints:'}
+                    </span>
                     <span className="text-xl font-bold">{complaints.length}</span>
                 </div>
             </div>

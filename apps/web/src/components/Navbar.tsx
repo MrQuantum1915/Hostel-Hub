@@ -5,9 +5,10 @@ import { ThemeToggle } from './ThemeToggle'
 
 interface NavbarProps {
   isloggedin: boolean
+  userRole?: string | null
 }
 
-function Navbar({ isloggedin }: NavbarProps) {
+function Navbar({ isloggedin, userRole }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
@@ -26,15 +27,27 @@ function Navbar({ isloggedin }: NavbarProps) {
 
         {/* desktop */}
         <div className="hidden md:flex flex-row items-center gap-8">
-          {['Home', 'Dashboard', 'Contact'].map((item) => (
+          {['Home', 'Dashboard', 'Announcements', 'Mess Feedback'].map((item) => {
+            if (!isloggedin && item !== 'Home') return null;
+            const path = item === 'Home' ? '/' : item === 'Mess Feedback' ? '/feedback' : `/${item.toLowerCase()}`;
+            return (
+              <Link
+                key={item}
+                to={path}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-0 after:h-[2px] after:bg-accent after:transition-all after:duration-300 hover:after:w-full"
+              >
+                {item}
+              </Link>
+            )
+          })}
+          {isloggedin && userRole === 'admin' && (
             <Link
-              key={item}
-              to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-              className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-0 after:h-[2px] after:bg-accent after:transition-all after:duration-300 hover:after:w-full"
+              to="/manage"
+              className="relative text-sm font-medium text-amber-500 hover:text-amber-400 transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-0 after:h-[2px] after:bg-amber-500 after:transition-all after:duration-300 hover:after:w-full"
             >
-              {item}
+              Manage
             </Link>
-          ))}
+          )}
           {isloggedin ? (
             <Link
               to="/profile"
@@ -64,16 +77,29 @@ function Navbar({ isloggedin }: NavbarProps) {
 
       {isOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 border-b border-border bg-background/95 backdrop-blur-xl p-6 flex flex-col gap-4 shadow-xl animate-in slide-in-from-top-5 fade-in duration-300">
-          {['Home', 'Dashboard', 'Contact'].map((item) => (
+          {['Home', 'Dashboard', 'Announcements', 'Mess Feedback'].map((item) => {
+            if (!isloggedin && item !== 'Home') return null;
+            const path = item === 'Home' ? '/' : item === 'Mess Feedback' ? '/feedback' : `/${item.toLowerCase()}`;
+            return (
+              <Link
+                key={item}
+                to={path}
+                className="text-lg font-medium text-muted-foreground hover:text-accent transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item}
+              </Link>
+            )
+          })}
+          {isloggedin && userRole === 'admin' && (
             <Link
-              key={item}
-              to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-              className="text-lg font-medium text-muted-foreground hover:text-accent transition-colors"
+              to="/manage"
+              className="text-lg font-bold text-amber-500 hover:text-amber-400 transition-colors"
               onClick={() => setIsOpen(false)}
             >
-              {item}
+              Manage
             </Link>
-          ))}
+          )}
           {isloggedin ? (
             <Link
               to="/profile"

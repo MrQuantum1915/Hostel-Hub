@@ -29,6 +29,7 @@ create table if not exists hostels(
 create table if not exists rooms(
     room_id uuid primary key default uuidv7(),
     hostel_name text not null references hostels(hostel_name) on delete cascade,
+    room_number varchar(10) not null,
     room_capacity integer not null,
     status text not null default 'available'
 );

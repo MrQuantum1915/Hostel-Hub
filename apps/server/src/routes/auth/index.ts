@@ -53,6 +53,11 @@ export default async function authRoutes(fastify: any) {
     fastify.get('/me', {
         onRequest: [fastify.authenticate]
     }, async (request: any, response: any) => {
-        return request.user;
+        try {
+            const user = await service.getUserById(request.user.id);
+            return response.send(user);
+        } catch (error) {
+            return response.code(404).send({ success: false, message: 'User not found' });
+        }
     });
 }

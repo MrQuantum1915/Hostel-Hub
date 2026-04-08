@@ -19,7 +19,7 @@ function Footer() {
             <nav className="flex flex-col gap-2 items-center md:items-start">
               <Link to="/complaint" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Complaints</Link>
               <Link to="/announcements" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Announcements</Link>
-              <Link to="/mess-feedback" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Mess Feedback</Link>
+              <Link to="/feedback" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Mess Feedback</Link>
             </nav>
           </div>
           <div className="flex flex-col gap-3 items-center md:items-start">
