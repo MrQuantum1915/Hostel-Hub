@@ -29,7 +29,7 @@ ALTER TABLE announcements ADD  CONSTRAINT chk_announcement_type
 
 
 
--- use UTC
+-- use UTC, caused issue due to local time ig
 CREATE OR REPLACE FUNCTION immutable_ts_to_date(ts TIMESTAMPTZ)
   RETURNS DATE AS $$ SELECT ($1 AT TIME ZONE 'UTC')::DATE $$ LANGUAGE SQL IMMUTABLE;
 
@@ -37,7 +37,7 @@ CREATE OR REPLACE FUNCTION immutable_ts_to_date(ts TIMESTAMPTZ)
 -- fxnal index for 1 feedback per day per student
 DROP INDEX IF EXISTS idx_unique_feedback_per_day;
 
--- Keep the EARLIEST submission per (student_id, day); delete every later one.
+-- temp cleanup 
 DELETE FROM mess_feedback
 WHERE feedback_id NOT IN (
     SELECT DISTINCT ON (student_id, immutable_ts_to_date(created_at)) feedback_id
@@ -49,34 +49,27 @@ CREATE UNIQUE INDEX idx_unique_feedback_per_day
   ON mess_feedback (student_id, immutable_ts_to_date(created_at));
 
 
--- ─────────────────────────────────────────────────────────────────────────────
--- 4. B-TREE INDEXES  (Query optimisation — IF NOT EXISTS = safe re-run)
--- ─────────────────────────────────────────────────────────────────────────────
 
--- Complaints: frequently filtered by student, status, assigned staff
+-- indexing (btree)
+-- complaints: gen freq filtered by student/status/assigned staff
 CREATE INDEX IF NOT EXISTS idx_complaints_student ON complaints(student_id);
 CREATE INDEX IF NOT EXISTS idx_complaints_status  ON complaints(status);
 CREATE INDEX IF NOT EXISTS idx_complaints_staff   ON complaints(assigned_staff_id);
 CREATE INDEX IF NOT EXISTS idx_complaints_created ON complaints(created_at DESC);
 
--- Feedback: queried by student, aggregated by date
+-- query by student, aggregate by date
 CREATE INDEX IF NOT EXISTS idx_feedback_student   ON mess_feedback(student_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_date      ON mess_feedback(created_at DESC);
 
--- Announcements: always sorted by posting date
+-- sorted by posting date
 CREATE INDEX IF NOT EXISTS idx_announcements_date ON announcements(posted_date DESC);
 
--- Students: looked up by hostel for hostel-level reports
 CREATE INDEX IF NOT EXISTS idx_student_hostel     ON student(hostel_name);
 
 
--- ─────────────────────────────────────────────────────────────────────────────
--- 5. VIEWS  (Logical Data Independence)
---    CREATE OR REPLACE VIEW cannot rename columns once the view exists,
---    so we DROP first.  CASCADE drops any dependent objects automatically.
--- ─────────────────────────────────────────────────────────────────────────────
+-- views
 
--- 5a. Complaint Dashboard: aggregated stats per status
+-- aggregate per status
 DROP VIEW IF EXISTS v_complaint_dashboard CASCADE;
 CREATE VIEW v_complaint_dashboard AS
 SELECT
@@ -84,10 +77,10 @@ SELECT
   COUNT(*)                   AS total_count,
   AVG(rating)::numeric(10,2) AS avg_rating
 FROM complaints
-GROUP BY status;
+GROUP BY sta  tus;
 
 
--- 5b. Enriched complaint rows with student identity
+-- enriched complaint data = complaint + student + user info
 DROP VIEW IF EXISTS v_student_complaints CASCADE;
 CREATE VIEW v_student_complaints AS
 SELECT
@@ -101,8 +94,7 @@ JOIN student s ON c.student_id = s.student_id
 JOIN users   u ON c.student_id = u.id;
 
 
--- 5c. Per-day aggregated mess feedback
---     Column names: date, count, avg_rating  — must match FeedbackTrend frontend type
+-- per day aggregated feeedback
 DROP VIEW IF EXISTS v_daily_mess_report CASCADE;
 CREATE VIEW v_daily_mess_report AS
 SELECT
@@ -116,11 +108,8 @@ GROUP BY created_at::date
 ORDER BY date DESC;
 
 
--- ─────────────────────────────────────────────────────────────────────────────
--- 6. STORED PROCEDURE  (PL/pgSQL — server-side computation)
---    Returns per-category complaint stats for a given hostel name.
--- ─────────────────────────────────────────────────────────────────────────────
 
+-- stored procedure
 CREATE OR REPLACE FUNCTION get_hostel_complaint_report(p_hostel_name TEXT)
 RETURNS TABLE (
   category    TEXT,
@@ -147,11 +136,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- ─────────────────────────────────────────────────────────────────────────────
--- 7. TRIGGERS  (Automatic audit timestamps — BEFORE UPDATE, row-level)
---    The trigger function sets NEW.updated_at = NOW() before every UPDATE,
---    so application code never needs to manually set updated_at.
--- ─────────────────────────────────────────────────────────────────────────────
+-- triggers
 
 CREATE OR REPLACE FUNCTION update_modified_timestamp()
 RETURNS TRIGGER AS $$
