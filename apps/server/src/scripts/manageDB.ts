@@ -50,8 +50,16 @@ const setupDB = async () => {
 
         console.log("Initializing database from db.sql...");
         await pool.query(schema);
-
         console.log("DB initialized successfully from db.sql!");
+
+        // run database level 2
+        const advancedPath = path.join(__dirname, '../db_advanced.sql');
+        if (fs.existsSync(advancedPath)) {
+            const advancedSQL = fs.readFileSync(advancedPath, 'utf-8');
+            console.log("Applying advanced DBMS features from db_advanced.sql...");
+            await pool.query(advancedSQL);
+            console.log("Advanced features applied successfully!");
+        }
 
     } catch (err) {
         console.error("DB initialization failed:", err);
@@ -84,6 +92,19 @@ const resetDB = async () => {
 
 };
 
+
+const applyAdvanced = async () => {
+    try {
+        const advancedPath = path.join(__dirname, '../db_advanced.sql');
+        const advancedSQL = fs.readFileSync(advancedPath, 'utf-8');
+        console.log("Applying db_advanced.sql to the running database...");
+        await pool.query(advancedSQL);
+        console.log("Advanced features applied successfully! (Views, Indexes, Triggers, Stored Procs, CHECK Constraints)");
+    } catch (err) {
+        console.error("Failed to apply advanced features:", err);
+        process.exit(1);
+    }
+};
 
 const runQuery = async () => {
     try {
@@ -122,8 +143,9 @@ const main = async () => {
 Usage: pnpm db:manage [command]
 
 Commands:
-    setup     Initialize the database tables
+    setup     Initialize the database tables (runs db.sql + db_advanced.sql)
     reset     Drop all tables and re-run setup
+    apply     Apply db_advanced.sql to an already-running database (no data loss)
     query     Run the SQL command defined in the QUERY constant
     --help    Show this help message
                 `);
@@ -142,6 +164,9 @@ Commands:
                 break;
             case 'reset':
                 await resetDB();
+                break;
+            case 'apply':
+                await applyAdvanced();
                 break;
             case 'query':
                 await runQuery();

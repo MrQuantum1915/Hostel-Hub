@@ -16,6 +16,8 @@ function Dashboard() {
     const [error, setError] = useState('')
     const [updatingParams, setUpdatingParams] = useState<string | null>(null)
 
+    const [staffList, setStaffList] = useState<any[]>([])
+
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
@@ -24,6 +26,14 @@ function Dashboard() {
                 if (!userRes.ok) throw new Error('Failed to load profile')
                 const userData = await userRes.json()
                 setUser(userData)
+
+                if (userData.user_role === 'admin') {
+                    const staffRes = await fetch('http://localhost:3000/admin/staff', { credentials: 'include' })
+                    if (staffRes.ok) {
+                        const staffData = await staffRes.json()
+                        setStaffList(staffData.staff || [])
+                    }
+                }
 
                 // 2. Fetch Complaints based on role
                 const endpoint = userData.user_role === 'student' ? '/complaints/me' : '/complaints/all'
@@ -40,6 +50,32 @@ function Dashboard() {
         }
         fetchDashboardData()
     }, [])
+
+    const handleAssignStaff = async (id: string, staffId: string) => {
+        setUpdatingParams(id)
+        try {
+            const res = await fetch(`http://localhost:3000/admin/complaints/${id}/assign`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ staff_id: staffId })
+            })
+            if (!res.ok) {
+                const data = await res.json()
+                throw new Error(data.message || 'Failed to assign staff')
+            }
+            
+            // update local state
+            setComplaints(prev => prev.map(c => 
+                c.complaint_id === id ? { ...c, assigned_staff_id: staffId } as any : c
+            ))
+        } catch (err: any) {
+            console.error(err)
+            alert(err.message || 'Error assigning staff')
+        } finally {
+            setUpdatingParams(null)
+        }
+    }
 
     const handleStatusChange = async (id: string, newStatus: string) => {
         setUpdatingParams(id)
@@ -125,7 +161,9 @@ function Dashboard() {
                             key={complaint.complaint_id} 
                             complaint={complaint} 
                             isAdmin={isAdmin}
+                            staffList={staffList}
                             onStatusChange={handleStatusChange}
+                            onAssignStaff={handleAssignStaff}
                         />
                     ))}
                 </div>

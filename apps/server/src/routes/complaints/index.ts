@@ -39,12 +39,17 @@ export default async function complaintRoutes(fastify: any) {
         const { id } = request.params;
         const { status } = request.body;
         const staff_id = request.user.user_role === 'staff' ? request.user.id : null;
-        const complaint = await complaintsService.updateComplaintStatus(id, status, staff_id);
-        if (!complaint) {
-            return response.code(404).send({ success: false, message: "Complaint not found" });
+        try {
+            const complaint = await complaintsService.updateComplaintStatus(id, status, staff_id);
+            if (!complaint) {
+                return response.code(404).send({ success: false, message: "Complaint not found" });
+            }
+            return response.code(200).send({ success: true, ...complaint, message: "Status Updated" });
+        } catch (err: any) {
+            return response.code(400).send({ success: false, message: err.message });
         }
-        return response.code(200).send({ success: true, ...complaint, message: "Status Updated" });
     });
+
 
     fastify.post('/:id/rate', { onRequest: [fastify.authenticate] }, async (request: any, response: any) => {
         const { id } = request.params;

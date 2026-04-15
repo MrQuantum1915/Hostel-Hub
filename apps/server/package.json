@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "db:manage": "tsx src/scripts/manageDB.ts",
+    "db:apply": "tsx src/scripts/manageDB.ts apply",
     "lint": "eslint ."
   },
   "devDependencies": {

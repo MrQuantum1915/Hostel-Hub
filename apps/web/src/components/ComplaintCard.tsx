@@ -13,15 +13,18 @@ export interface ComplaintType {
     image_id: string | null
     student_name?: string
     rating: number | null
+    assigned_staff_id?: string | null
 }
 
 interface ComplaintCardProps {
     complaint: ComplaintType
     isAdmin: boolean
+    staffList?: any[]
     onStatusChange?: (id: string, newStatus: string) => void
+    onAssignStaff?: (id: string, staffId: string) => void
 }
 
-export function ComplaintCard({ complaint: initialComplaint, isAdmin, onStatusChange }: ComplaintCardProps) {
+export function ComplaintCard({ complaint: initialComplaint, isAdmin, staffList, onStatusChange, onAssignStaff }: ComplaintCardProps) {
     const [complaint, setComplaint] = useState(initialComplaint)
     const [showModal, setShowModal] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
@@ -138,6 +141,51 @@ export function ComplaintCard({ complaint: initialComplaint, isAdmin, onStatusCh
                                     Cat: {complaint.category}
                                 </span>
                             </div>
+
+                            {isAdmin && (
+                                <div className="mb-4 bg-muted/30 p-4 border border-border rounded-xl">
+                                    <h4 className="text-sm font-bold mb-3 flex items-center gap-2">Admin Controls</h4>
+                                    
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 justify-between">
+                                            <span className="text-xs font-medium text-muted-foreground w-24">Status</span>
+                                            <select 
+                                                value={complaint.status}
+                                                onChange={(e) => {
+                                                    const newStatus = e.target.value;
+                                                    setComplaint(prev => ({...prev, status: newStatus}));
+                                                    if(onStatusChange) onStatusChange(complaint.complaint_id, newStatus);
+                                                }}
+                                                className="flex-1 bg-background border border-border text-xs font-medium rounded-lg px-3 py-2 outline-none focus:border-primary/50"
+                                            >
+                                                <option value="pending">Pending</option>
+                                                <option value="in progress">In Progress</option>
+                                                <option value="resolved">Resolved</option>
+                                            </select>
+                                        </div>
+
+                                        {staffList && (
+                                            <div className="flex items-center gap-3 justify-between">
+                                                <span className="text-xs font-medium text-muted-foreground w-24">Assign Staff</span>
+                                                <select 
+                                                    value={(complaint as any).assigned_staff_id || ""}
+                                                    onChange={(e) => {
+                                                        const staffId = e.target.value;
+                                                        setComplaint(prev => ({...prev, assigned_staff_id: staffId} as any));
+                                                        if(onAssignStaff) onAssignStaff(complaint.complaint_id, staffId);
+                                                    }}
+                                                    className="flex-1 bg-background border border-border text-xs font-medium rounded-lg px-3 py-2 outline-none focus:border-primary/50"
+                                                >
+                                                    <option value="" disabled>Select Staff</option>
+                                                    {staffList.map(staff => (
+                                                        <option key={staff.id} value={staff.id}>{staff.name} ({staff.designation})</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="space-y-4">
                                 <div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Users, Building, ShieldCheck, ShieldAlert, Loader2, Search, X, CheckCircle2 } from 'lucide-react'
+import { Users, Building, ShieldCheck, ShieldAlert, Loader2, Search, X, CheckCircle2, UserCog } from 'lucide-react'
 
 interface Student {
     id: string
@@ -27,10 +27,20 @@ interface Hostel {
     rooms: Room[]
 }
 
+interface User {
+    id: string
+    user_name: string
+    name: string
+    email: string
+    phone: string
+    user_role: string
+}
+
 export default function Manage() {
-    const [activeTab, setActiveTab] = useState<'students' | 'hostels'>('students')
+    const [activeTab, setActiveTab] = useState<'students' | 'hostels' | 'users'>('students')
     const [students, setStudents] = useState<Student[]>([])
     const [hostels, setHostels] = useState<Hostel[]>([])
+    const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState('')
     
@@ -47,19 +57,41 @@ export default function Manage() {
     const fetchData = async () => {
         setLoading(true)
         try {
-            const [stdRes, hstRes] = await Promise.all([
+            const [stdRes, hstRes, userRes] = await Promise.all([
                 fetch('http://localhost:3000/admin/students', { credentials: 'include' }),
-                fetch('http://localhost:3000/admin/hostels', { credentials: 'include' })
+                fetch('http://localhost:3000/admin/hostels', { credentials: 'include' }),
+                fetch('http://localhost:3000/admin/users', { credentials: 'include' })
             ])
             const stdData = await stdRes.json()
             const hstData = await hstRes.json()
+            const userData = await userRes.json()
             
             if (stdData.success) setStudents(stdData.students)
             if (hstData.success) setHostels(hstData.hostels)
+            if (userData.success) setUsers(userData.users)
         } catch (err) {
             console.error(err)
         } finally {
             setLoading(false)
+        }
+    }
+
+    const handleRoleChange = async (userId: string, newRole: string) => {
+        try {
+            const res = await fetch(`http://localhost:3000/admin/users/${userId}/role`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ role: newRole })
+            })
+            const data = await res.json()
+            if (data.success) {
+                setUsers(prev => prev.map(u => u.id === userId ? { ...u, user_role: newRole } : u))
+            } else {
+                alert(data.message || 'Failed to update role')
+            }
+        } catch (err: any) {
+            alert(err.message || 'Failed to update role')
         }
     }
 
@@ -113,12 +145,18 @@ export default function Manage() {
                         <p className="text-muted-foreground">Administer students, verifiable credentials, and hostels.</p>
                     </div>
                     
-                    <div className="flex bg-muted p-1 rounded-xl border border-border">
+                    <div className="flex flex-wrap bg-muted p-1 rounded-xl border border-border gap-1">
                         <button 
                             onClick={() => setActiveTab('students')}
                             className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'students' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                         >
                             <Users className="w-4 h-4" /> Students
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('users')}
+                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                        >
+                            <UserCog className="w-4 h-4" /> All Users
                         </button>
                         <button 
                             onClick={() => setActiveTab('hostels')}
@@ -184,6 +222,52 @@ export default function Manage() {
                                             Verify Student
                                         </button>
                                     )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'users' && (
+                    <div className="space-y-6">
+                        <div className="relative max-w-md">
+                            <Search className="absolute left-4 top-3.5 w-5 h-5 text-muted-foreground" />
+                            <input 
+                                type="text"
+                                placeholder="Search by name or email..."
+                                className="w-full bg-card border border-border rounded-xl pl-12 pr-4 py-3 focus:outline-none focus:border-primary/50"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {users.filter(u => 
+                                u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                u.email.toLowerCase().includes(searchQuery.toLowerCase())
+                            ).map(user => (
+                                <div key={user.id} className="bg-card border border-border rounded-xl p-6 hover:shadow-md transition-all">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h3 className="font-bold text-lg">{user.name}</h3>
+                                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-muted/50 rounded-lg p-4 space-y-3 text-sm">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-muted-foreground font-medium">Role:</span>
+                                            <select 
+                                                className="bg-background border border-border rounded-lg px-2 py-1 outline-none focus:ring-1 focus:ring-primary text-xs font-bold"
+                                                value={user.user_role}
+                                                onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                            >
+                                                <option value="student">Student</option>
+                                                <option value="staff">Staff</option>
+                                                <option value="admin">Admin</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>

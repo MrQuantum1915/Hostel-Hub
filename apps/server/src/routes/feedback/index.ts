@@ -11,6 +11,11 @@ export default async function feedbackRoutes(fastify: any) {
             return response.code(400).send({ success: false, message: "Valid rating (1-5) is required." });
         }
 
+        const alreadySubmitted = await feedbackService.checkAlreadySubmittedToday(student_id);
+        if (alreadySubmitted) {
+            return response.code(409).send({ success: false, message: "You have already submitted feedback for today." });
+        }
+
         try {
             const feedback = await feedbackService.submitFeedback(student_id, rating, comments);
             return response.code(201).send({ success: true, ...feedback, message: "Feedback Submitted Successfully" });
